@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container ">
+        <div class="my-card">
+            <form>
+                <div class="search-city">
+                    <input class="location" type="text" placeholder="add location" padding="2px">
+                    <input class="search" type="submit" value="🔍">
+                    <input id="current-location" class="search" type="submit" value="location 📍">
+                </div>
+            </form>
+        </div>
+
+        <div class="row my-card">
+            <div class="col-6">
+                <h4 id="local-time">Tuesday, 3pm CET</h4>
+                <br />
+                <div>
+                    <div class="weather-now">
+                        <h3 id="weather-description">Sunny</h3>
+                    </div>
+
+                    <p class="temperature" id="degrees">23</p>
+                    <span class="units">
+                        <div id="celsius-link">°C</div>
+
+                        <div id="farenheit-link">
+                            °F
+                        </div>
+                    </span>
+
+                    <div class="wather-hourly">
+                        <div id="feels-like">Feels like 13 °C</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="weather-details">
+                    <h5>Weather details</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="wind" id="w-lol">Wind intensity in KM</div>
+
+                            <div class="pressure" id="p-lol">Pressure in IN</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="humidity" id="h-lol">Humidity in %</div>
+
+                            <div class="max-temp" id="max-lol">Max to Min temp °C/°F</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rain">
+                    <h5>Chances of rain</h5>
+                    to be added
+                </div>
+                <br>
+                <div class="next-days">
+                    <h5>Next 7 days</h5>
+                    <div class="row">
+                        <div class="col">Day 1 🌦 <br> 20°C</div>
+                        <div class="col">Day 2 🌦 <br> 20°C</div>
+                        <div class="col">Day 3 🌦 <br> 20°C</div>
+                        <div class="col">Day 4 🌦 <br> 20°C</div>
+                        <div class="col">Day 5 🌦 <br> 20°C</div>
+                        <div class="col">Day 6 🌦 <br> 20°C</div>
+                        <div class="col">Day 7 🌦 <br> 20°C</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <video id="video"></video>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+
+
+</html>
