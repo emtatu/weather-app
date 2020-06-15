@@ -30,7 +30,10 @@
 #w-lol,
 #p-lol,
 #h-lol,
-#max-lol {
+#min-lol,
+#further-info,
+#sun-up,
+#sun-down {
   border-radius: 10px;
   margin-bottom: 0.5em;
   padding: 5%;
@@ -103,4 +106,26 @@ video {
 .search:hover {
   border: solid 1px #b0c9e8;
   background: #fff all 200ms;
+}
+.new {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+footer {
+  text-align: center;
+  margin: 0 auto;
+  color: white;
+  font-family: monospace;
+  font-size: large;
+}
+a:link {
+  color: green;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: green;
+  background-color: transparent;
+  text-decoration: none;
 }

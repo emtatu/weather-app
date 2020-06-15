@@ -22,6 +22,18 @@ let country;
 let apiFlagUrl = `https://www.countryflags.io/${country}/shiny/32.png`;
 const source = document.createElement("source");
 
+let search = document.querySelector(`.search`);
+search.addEventListener("click", onSearchCity);
+let button = document.querySelector("#current-location");
+button.addEventListener("click", currentLocation);
+let celsius = document.querySelector(`#celsius-link`);
+celsius.addEventListener("click", function () {
+  changeMetrics("metric");
+});
+let far = document.querySelector("#farenheit-link");
+far.addEventListener("click", function () {
+  changeMetrics("imperial");
+});
 function initVideoByWeather(weather) {
   var video = document.getElementById("video");
   video.pause();
@@ -97,8 +109,6 @@ function onSearchCity(event) {
       playVideoByWeather(response.data.weather[0].main.toLowerCase());
     });
 }
-let search = document.querySelector(`.search`);
-search.addEventListener("click", onSearchCity);
 
 function changeMetrics(type) {
   typeUnit = type;
@@ -128,6 +138,7 @@ function currentLocation() {
           `https://api.openweathermap.org/data/2.5/weather?lat=${pos.lat}&lon=${pos.lng}&appid=${apiKey}&units=${typeUnit}`
         )
         .then(function (response) {
+          data = response.data;
           country = response.data.sys.country;
           localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
           changeHTML(response);
@@ -146,19 +157,34 @@ function currentLocation() {
   }
 }
 
-let button = document.querySelector("#current-location");
-button.addEventListener("click", currentLocation);
-
 function weatherDetails(data) {
   let windIntensty = document.querySelector(`#w-lol`);
   let windData = data.wind.speed;
   windIntensty.innerHTML = `Wind intensity is ${windData} km/h`;
   let pressure = document.querySelector(`#p-lol`);
   let pressureData = data.main.pressure;
-  pressure.innerHTML = `Athm pressure @ ${pressureData} IN `;
+  pressure.innerHTML = `Athm pressure is ${pressureData} IN `;
   let humidity = document.querySelector(`#h-lol`);
   let humidityData = data.main.humidity;
   humidity.innerHTML = `Humidity is ${humidityData}%`;
+  let minTemp = document.querySelector("#min-lol");
+  let minTemData = data.main.temp_min.toFixed(1);
+  minTemp.innerHTML = `Min temp is ${minTemData}°C`;
+  let sunRise = document.querySelector("#sun-rise");
+  let sunRiseData = new Date(data.sys.sunrise);
+  sunRise.innerHTML = `Sunrise is at ${formatAMPM(sunRiseData)}`;
+  let sunSet = document.querySelector("#sun-set");
+  let sunSetData = new Date(data.sys.sunset);
+  sunSet.innerHTML = `Sunset is at ${formatAMPM(sunSetData)}`;
 }
-
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}
 currentLocation();
