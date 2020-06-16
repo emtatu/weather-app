@@ -1,8 +1,7 @@
-// const axios = require("axios").default;
+// Global variable
 const apiKey = "b99b221a13e030f76e6fae84e141eecf";
-
-let now = new Date();
-let days = [
+const now = new Date();
+const days = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -11,28 +10,170 @@ let days = [
   "Friday",
   "Saturday",
 ];
-let today = days[now.getDay()];
-let hour = now.getHours();
-let min = now.getMinutes();
-let localTime = document.querySelector(`#local-time`);
-localTime.innerHTML = `${today}, ${hour}:${min} CET`;
-let data;
+const today = days[now.getDay()];
+const hour = now.getHours();
+const min = now.getMinutes();
+const source = document.createElement("source");
+const localTime = document.querySelector(`#local-time`);
+let data = null;
 let typeUnit = "metric";
 
-const source = document.createElement("source");
-
-let search = document.querySelector(`.search`);
+// All the EventListener
+const search = document.querySelector(`.search`);
 search.addEventListener("click", onSearchCity);
-let button = document.querySelector("#current-location");
-button.addEventListener("click", currentLocation);
-let celsius = document.querySelector(`#celsius-link`);
+const button = document.querySelector("#current-location");
+button.addEventListener("click", getCurrentLocation);
+const celsius = document.querySelector(`#celsius-link`);
 celsius.addEventListener("click", function () {
-  changeMetrics("metric");
+  onChangeMetrics("metric");
 });
-let far = document.querySelector("#farenheit-link");
+const far = document.querySelector("#farenheit-link");
 far.addEventListener("click", function () {
-  changeMetrics("imperial");
+  onChangeMetrics("imperial");
 });
+
+// Event function
+function onSearchCity(event) {
+  event.preventDefault();
+  let input = document.querySelector(".location");
+
+  if (input.value.trim() === "") {
+    return;
+  }
+  axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&appid=${apiKey}&units=${typeUnit}`
+    )
+    .then((response) => {
+      data = response.data;
+      country = response.data.sys.country;
+      localTime.innerHTML = `${today}, ${hour}:${min} CET in ${input.value}`;
+      input.value = "";
+      changeHTML(response);
+      playVideoByWeather(response.data.weather[0].main.toLowerCase());
+    });
+}
+function onChangeMetrics(type) {
+  typeUnit = type;
+  if (data && type) {
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${data.name}&appid=${apiKey}&units=${typeUnit}`
+      )
+      .then(function (response) {
+        data = response.data;
+        country = response.data.sys.country;
+        changeHTML(response);
+        localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
+      });
+  }
+}
+function getCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${pos.lat}&lon=${pos.lng}&appid=${apiKey}&units=${typeUnit}`
+        )
+        .then(function (response) {
+          data = response.data;
+          country = response.data.sys.country;
+          localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
+          changeHTML(response);
+          const weather = response.data.weather[0].main.toLowerCase();
+          if (!data) {
+            initVideoByWeather(weather);
+          } else {
+            data = response.data;
+            playVideoByWeather(weather);
+          }
+        });
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    alert("Browser not support");
+  }
+}
+
+// Change html from data
+function changeHTML(response) {
+  console.log("RESPONSE API", response);
+  changeTemperature(Math.round(response.data.main.temp));
+  changeFeelsLike(response.data.main.feels_like.toFixed(1));
+  changeFlag(response.data.sys.country);
+  changeApiDescription(response.data.weather[0].main);
+  changeWeatherDetails(response.data);
+}
+function changeTemperature(temperature) {
+  const newTemp = document.querySelector("#degrees");
+  newTemp.innerHTML = ` ${temperature}`;
+}
+function changeFeelsLike(feelsLike) {
+  const feelsLikeElement = document.querySelector(`#feels-like`);
+  feelsLikeElement.innerHTML = `Feels like ${feelsLike} °C`;
+  if (typeUnit !== "metric") {
+    feelsLikeElement.innerHTML = `Feels like ${feelsLike} °F`;
+  }
+}
+function changeApiDescription(description) {
+  const weatherDescription = document.querySelector(`#weather-description`);
+  weatherDescription.innerHTML = `${description} `;
+  animate(weatherDescription);
+}
+function changeFlag(country) {
+  const flag = document.querySelector("#flag");
+  flag.setAttribute(
+    "src",
+    `https://www.countryflags.io/${country}/shiny/64.png`
+  );
+}
+function changeWeatherDetails(data) {
+  const iconElement = document.querySelector(`#icon`);
+  iconElement.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+  );
+  const windIntensty = document.querySelector(`#w-lol`);
+  const windData = data.wind.speed;
+  windIntensty.innerHTML = `Wind intensity is ${windData} km/h`;
+  const pressure = document.querySelector(`#p-lol`);
+  const pressureData = data.main.pressure;
+  pressure.innerHTML = `Athm pressure is ${pressureData}/hPa `;
+  const humidity = document.querySelector(`#h-lol`);
+  const humidityData = data.main.humidity;
+  humidity.innerHTML = `Humidity is ${humidityData}%`;
+  const minTemp = document.querySelector("#min-lol");
+  const minTemData = data.main.temp_min.toFixed(1);
+  minTemp.innerHTML = `Min temp is ${minTemData}°C`;
+  const sunRise = document.querySelector("#sun-rise");
+  const sunRiseData = new Date(data.sys.sunrise);
+  sunRise.innerHTML = `Sunrise is at ${formatAMPM(sunRiseData)}`;
+  const sunSet = document.querySelector("#sun-set");
+  const sunSetData = new Date(data.sys.sunset);
+  sunSet.innerHTML = `Sunset is at ${formatAMPM(sunSetData)}`;
+}
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}
+
+// bonus video & animation
+function animate(el) {
+  el.classList.add("animate__fadeIn");
+  setTimeout(() => {
+    el.classList.remove("animate__fadeIn");
+  }, 1000);
+}
 function initVideoByWeather(weather) {
   var video = document.getElementById("video");
   video.pause();
@@ -71,142 +212,6 @@ function playVideoByWeather(weather) {
     video.play();
   }, 100);
 }
-function changeHTML(response) {
-  console.log("RESPONSE API", response);
-  let iconElement = document.querySelector(`#icon`);
-  iconElement.setAttribute(
-    "src",
-    `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
-  );
-  let temperature = Math.round(response.data.main.temp);
-  let newTemp = document.querySelector("#degrees");
-  newTemp.innerHTML = ` ${temperature}`;
-  let feelsLikeDescr = response.data.main.feels_like.toFixed(1);
-  let feelsLike = document.querySelector(`#feels-like`);
-  feelsLike.innerHTML = `Feels like ${feelsLikeDescr} °C`;
-  if (typeUnit !== "metric") {
-    feelsLike.innerHTML = `Feels like ${feelsLikeDescr} °F`;
-  }
-  changeFlag(response.data.sys.country);
-  changeApiDescription(response.data.weather[0].main);
-  weatherDetails(response.data);
-}
-function changeApiDescription(description) {
-  let weatherDescription = document.querySelector(`#weather-description`);
-  weatherDescription.innerHTML = `${description} `;
-  animate(weatherDescription);
-}
-function animate(el) {
-  el.classList.add("animate__fadeIn");
-  setTimeout(() => {
-    el.classList.remove("animate__fadeIn");
-  }, 1000);
-}
-function changeFlag(country) {
-  let flag = document.querySelector("#flag");
-  flag.setAttribute(
-    "src",
-    `https://www.countryflags.io/${country}/shiny/64.png`
-  );
-  animate(flag);
-}
 
-function onSearchCity(event) {
-  event.preventDefault();
-  let input = document.querySelector(".location");
-
-  if (input.value.trim() === "") {
-    return;
-  }
-  axios
-    .get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&appid=${apiKey}&units=${typeUnit}`
-    )
-    .then((response) => {
-      data = response.data;
-      country = response.data.sys.country;
-      localTime.innerHTML = `${today}, ${hour}:${min} CET in ${input.value}`;
-      input.value = "";
-      changeHTML(response);
-      playVideoByWeather(response.data.weather[0].main.toLowerCase());
-    });
-}
-
-function changeMetrics(type) {
-  typeUnit = type;
-  if (data && type) {
-    axios
-      .get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${data.name}&appid=${apiKey}&units=${typeUnit}`
-      )
-      .then(function (response) {
-        data = response.data;
-        country = response.data.sys.country;
-        changeHTML(response);
-        localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
-      });
-  }
-}
-
-function currentLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${pos.lat}&lon=${pos.lng}&appid=${apiKey}&units=${typeUnit}`
-        )
-        .then(function (response) {
-          data = response.data;
-          country = response.data.sys.country;
-          localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
-          changeHTML(response);
-          const weather = response.data.weather[0].main.toLowerCase();
-          if (!data) {
-            initVideoByWeather(weather);
-          } else {
-            data = response.data;
-            playVideoByWeather(weather);
-          }
-        });
-    });
-  } else {
-    // Browser doesn't support Geolocation
-    alert("Browser not support");
-  }
-}
-
-function weatherDetails(data) {
-  let windIntensty = document.querySelector(`#w-lol`);
-  let windData = data.wind.speed;
-  windIntensty.innerHTML = `Wind intensity is ${windData} km/h`;
-  let pressure = document.querySelector(`#p-lol`);
-  let pressureData = data.main.pressure;
-  pressure.innerHTML = `Athm pressure is ${pressureData}/hPa `;
-  let humidity = document.querySelector(`#h-lol`);
-  let humidityData = data.main.humidity;
-  humidity.innerHTML = `Humidity is ${humidityData}%`;
-  let minTemp = document.querySelector("#min-lol");
-  let minTemData = data.main.temp_min.toFixed(1);
-  minTemp.innerHTML = `Min temp is ${minTemData}°C`;
-  let sunRise = document.querySelector("#sun-rise");
-  let sunRiseData = new Date(data.sys.sunrise);
-  sunRise.innerHTML = `Sunrise is at ${formatAMPM(sunRiseData)}`;
-  let sunSet = document.querySelector("#sun-set");
-  let sunSetData = new Date(data.sys.sunset);
-  sunSet.innerHTML = `Sunset is at ${formatAMPM(sunSetData)}`;
-}
-function formatAMPM(date) {
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  var strTime = hours + ":" + minutes + " " + ampm;
-  return strTime;
-}
-currentLocation();
+// init call
+getCurrentLocation();
