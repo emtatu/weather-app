@@ -32,8 +32,8 @@
 #h-lol,
 #min-lol,
 #further-info,
-#sun-up,
-#sun-down {
+#sun-rise,
+#sun-set {
   border-radius: 10px;
   margin-bottom: 0.5em;
   padding: 5%;
@@ -45,23 +45,14 @@
   align-items: baseline;
   font-size: 30px;
 }
-.weather-emoji {
-  font-size: 50px;
-}
 
 .temperature {
   font-size: 70px;
-  position: relative;
-  top: 60px;
-  text-emphasis: center;
 }
 .units {
   text-align: center;
   font-weight: 90px;
   font-size: large;
-  position: relative;
-  bottom: 40px;
-  left: 20px;
 }
 #celsius-link:hover,
 #farenheit-link:hover {
@@ -115,7 +106,7 @@ video {
 footer {
   text-align: center;
   margin: 0 auto;
-  color: white;
+  color: green;
   font-family: monospace;
   font-size: large;
 }

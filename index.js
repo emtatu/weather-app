@@ -18,8 +18,7 @@ let localTime = document.querySelector(`#local-time`);
 localTime.innerHTML = `${today}, ${hour}:${min} CET`;
 let data;
 let typeUnit = "metric";
-let country;
-let apiFlagUrl = `https://www.countryflags.io/${country}/shiny/32.png`;
+
 const source = document.createElement("source");
 
 let search = document.querySelector(`.search`);
@@ -49,29 +48,36 @@ function initVideoByWeather(weather) {
 
   video.muted = "muted";
   video.loop = true;
+  video.autoplay = true;
   video.appendChild(source);
   video.play();
 }
 
 function playVideoByWeather(weather) {
   var video = document.getElementById("video");
+  setTimeout(() => {
+    video.pause();
 
-  video.pause();
-
-  if (weather.includes("rain") || weather.includes("thunder")) {
-    source.setAttribute("src", "videos/rain.mp4");
-  } else if (weather.includes("sun") || weather.includes("clear")) {
-    source.setAttribute("src", "videos/sun.mp4");
-  } else if (weather.includes("cloud")) {
-    source.setAttribute("src", "videos/cloud.mp4");
-  } else {
-    source.setAttribute("src", "videos/snow.mp4");
-  }
-  video.load();
-  video.play();
+    if (weather.includes("rain") || weather.includes("thunder")) {
+      source.setAttribute("src", "videos/rain.mp4");
+    } else if (weather.includes("sun") || weather.includes("clear")) {
+      source.setAttribute("src", "videos/sun.mp4");
+    } else if (weather.includes("cloud")) {
+      source.setAttribute("src", "videos/cloud.mp4");
+    } else {
+      source.setAttribute("src", "videos/snow.mp4");
+    }
+    video.load();
+    video.play();
+  }, 100);
 }
 function changeHTML(response) {
   console.log("RESPONSE API", response);
+  let iconElement = document.querySelector(`#icon`);
+  iconElement.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+  );
   let temperature = Math.round(response.data.main.temp);
   let newTemp = document.querySelector("#degrees");
   newTemp.innerHTML = ` ${temperature}`;
@@ -81,12 +87,28 @@ function changeHTML(response) {
   if (typeUnit !== "metric") {
     feelsLike.innerHTML = `Feels like ${feelsLikeDescr} °F`;
   }
+  changeFlag(response.data.sys.country);
   changeApiDescription(response.data.weather[0].main);
   weatherDetails(response.data);
 }
 function changeApiDescription(description) {
   let weatherDescription = document.querySelector(`#weather-description`);
   weatherDescription.innerHTML = `${description} `;
+  animate(weatherDescription);
+}
+function animate(el) {
+  el.classList.add("animate__fadeIn");
+  setTimeout(() => {
+    el.classList.remove("animate__fadeIn");
+  }, 1000);
+}
+function changeFlag(country) {
+  let flag = document.querySelector("#flag");
+  flag.setAttribute(
+    "src",
+    `https://www.countryflags.io/${country}/shiny/64.png`
+  );
+  animate(flag);
 }
 
 function onSearchCity(event) {
@@ -163,7 +185,7 @@ function weatherDetails(data) {
   windIntensty.innerHTML = `Wind intensity is ${windData} km/h`;
   let pressure = document.querySelector(`#p-lol`);
   let pressureData = data.main.pressure;
-  pressure.innerHTML = `Athm pressure is ${pressureData} IN `;
+  pressure.innerHTML = `Athm pressure is ${pressureData}/hPa `;
   let humidity = document.querySelector(`#h-lol`);
   let humidityData = data.main.humidity;
   humidity.innerHTML = `Humidity is ${humidityData}%`;

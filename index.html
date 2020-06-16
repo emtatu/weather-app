@@ -9,37 +9,48 @@
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
 </head>
 
 <body>
-    <div class="container ">
+    <div class="container">
         <div class="my-card">
             <form>
                 <div class="search-city">
                     <input class="location" type="text" placeholder="add location" padding="2px">
                     <input class="search" type="submit" value="🔍">
-                    <input id="current-location" class="search" type="submit" value=" 📍">
+                    <input id="current-location" class="search" type="button" value=" 📍">
                 </div>
             </form>
         </div>
 
         <div class="row my-card">
             <div class="col-6">
-                <h4 id="local-time">Tuesday, 3pm CET</h4>
+                <h4 id="local-time">Tuesday, 3pm CET, location</h4>
+                <img style="margin-left: 1em;" id="flag" class="animate__animated" />
+
                 <br />
                 <div>
                     <div class="weather-now">
-                        <h3 id="weather-description">Sunny</h3>
+                        <h3 id="weather-description" class="animate__animated">Sunny</h3>
+
+                    </div>
+                    <img id="icon" />
+                    <div style="display: flex;">
+                        <p class="temperature" style="flex-grow: 1;" id="degrees">23</p>
+                        <span class="units" style="flex-grow: 1; display: flex; flex-direction: column;">
+                            <div>
+                                <div id="celsius-link">°C</div>
+
+                            </div>
+                            <div>
+                                <div id="farenheit-link">°F</div>
+
+                            </div>
+
+                        </span>
                     </div>
 
-                    <p class="temperature" id="degrees">23</p>
-                    <span class="units">
-                        <div id="celsius-link">°C</div>
-
-                        <div id="farenheit-link">
-                            °F
-                        </div>
-                    </span>
 
                     <div class="wather-hourly">
                         <div id="feels-like">Feels like 13 °C</div>
