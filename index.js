@@ -80,10 +80,6 @@ function getCurrentLocation() {
           `https://api.openweathermap.org/data/2.5/weather?lat=${pos.lat}&lon=${pos.lng}&appid=${apiKey}&units=${typeUnit}`
         )
         .then(function (response) {
-          data = response.data;
-          country = response.data.sys.country;
-          localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
-          changeHTML(response);
           const weather = response.data.weather[0].main.toLowerCase();
           if (!data) {
             initVideoByWeather(weather);
@@ -91,6 +87,9 @@ function getCurrentLocation() {
             data = response.data;
             playVideoByWeather(weather);
           }
+          country = response.data.sys.country;
+          localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
+          changeHTML(response);
         });
     });
   } else {
@@ -175,7 +174,7 @@ function animate(el) {
   }, 1000);
 }
 function initVideoByWeather(weather) {
-  var video = document.getElementById("video");
+  const video = document.getElementById("video");
   video.pause();
   if (weather.includes("rain") || weather.includes("thunder")) {
     source.setAttribute("src", "videos/rain.mp4");
@@ -195,7 +194,7 @@ function initVideoByWeather(weather) {
 }
 
 function playVideoByWeather(weather) {
-  var video = document.getElementById("video");
+  const video = document.getElementById("video");
   setTimeout(() => {
     video.pause();
 
