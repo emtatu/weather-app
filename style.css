@@ -59,12 +59,6 @@
   cursor: pointer;
   font-weight: bold;
 }
-video {
-  width: 100vw;
-  position: fixed;
-  top: 0;
-  z-index: 0;
-}
 .search-city {
   padding: 0.5px;
   margin: solid 1px;
@@ -119,4 +113,31 @@ a:visited {
   color: green;
   background-color: transparent;
   text-decoration: none;
+}
+video {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  z-index: -1;
+}
+@media (min-aspect-ratio: 16/9) {
+  video {
+    width: 100%;
+    height: auto;
+  }
+}
+@media (max-aspect-ratio: 16/9) {
+  video {
+    width: auto;
+    height: 100%;
+  }
+}
+@media (max-width: 767px) {
+  video {
+    display: none;
+  }
+  body {
+    background: url("img/poster.jpg");
+    background-size: cover;
+  }
 }
