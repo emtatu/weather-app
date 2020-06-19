@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeatherApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
 </head>
@@ -19,41 +19,38 @@
                 <div class="search-city">
                     <input class="location" type="text" placeholder="add location" padding="2px">
                     <input class="search" type="submit" value="🔍">
-                    <input id="current-location" class="search" type="button" value=" 📍">
+                    <input id="current-location" class="search" type="button" value="🌍">
                 </div>
             </form>
         </div>
 
         <div class="row my-card">
+            <div class="col-12" style="display: flex; align-items: center; flex-grow: 99;">
+                <h4 id="local-time">location, flag, Tuesday, 3pm CET</h4>
+                <img style="margin-bottom: 1em; margin-left: 1em;" id="flag" class="animate__animated" />
+            </div>
             <div class="col-6">
-                <h4 id="local-time">Tuesday, 3pm CET, location</h4>
-                <img style="margin-left: 1em;" id="flag" class="animate__animated" />
 
-                <br />
                 <div>
                     <div class="weather-now">
-                        <h3 id="weather-description" class="animate__animated">Sunny</h3>
-
-                    </div>
-                    <img id="icon" />
-                    <div style="display: flex;">
-                        <p class="temperature" style="flex-grow: 1;" id="degrees">23</p>
-                        <span class="units" style="flex-grow: 1; display: flex; flex-direction: column;">
-                            <div>
+                        <h3 id="weather-description" class="animate__animated" style="display: flex;">Sunny</h3>
+                        <div class="row">
+                            <div class="col-6" style="display: flex; align-items: baseline;">
+                                <div class="temperature" id="degrees"></div>
                                 <div id="celsius-link">°C</div>
-
+                                <div id="farenheit-link">/°F</div>
+                                <span class="units" style="flex-grow: 1; display: flex; flex-direction: column;"></span>
                             </div>
-                            <div>
-                                <div id="farenheit-link">°F</div>
-
+                            <div class="col-6">
+                                <img id="icon" style="display: flex;" />
                             </div>
 
-                        </span>
+                        </div>
+
                     </div>
-
 
                     <div class="wather-hourly">
-                        <div id="feels-like">Feels like 13 °C</div>
+                        <div id="feels-like"><em>Feels like 13 °C</em></div>
                     </div>
                 </div>
             </div>
@@ -61,6 +58,7 @@
             <div class="col-6 new">
                 <div class="weather-details">
                     <h5>Weather details</h5>
+                    <hr>
                     <div class="row">
                         <div class="col-6">
                             <div class="wind" id="w-lol">Wind intensity in KM</div>
@@ -73,30 +71,26 @@
                             <div class="min-temp" id="min-lol"> Min temp °C/°F</div>
                         </div>
                         <div class="col-6">
-                            <div class="sun-set" id="sun-set">Sun rise is at ...</div>
+                            <div class="sun-set" id="sun-set">Sun set is at ...</div>
 
                         </div>
                         <div class="col-6">
-                            <div class="sun-rise" id="sun-rise">Sun sets at ...</div>
+                            <div class="max-temp" id="max-lol">Max temp ..°C/°F</div>
 
                         </div>
 
 
                     </div>
                 </div>
+            </div>
+            <div class="next-days">
+                <h5><strong>Next 7 days
+                    </strong>
+                    <hr>
+                </h5>
 
-                <div class="next-days">
-                    <h5>Next 7 days</h5>
-                    <div class="row">
-                        <div class="col">Day 1 🌦 <br> 20°C</div>
-                        <div class="col">Day 2 🌦 <br> 20°C</div>
-                        <div class="col">Day 3 🌦 <br> 20°C</div>
-                        <div class="col">Day 4 🌦 <br> 20°C</div>
-                        <div class="col">Day 5 🌦 <br> 20°C</div>
-                        <div class="col">Day 6 🌦 <br> 20°C</div>
-                        <div class="col">Day 7 🌦 <br> 20°C</div>
-                    </div>
-
+                <div id="next-day-content" class="row">
+                    <!-- <div class="col">Day 1 🌦 <br> 20°C</div> -->
                 </div>
             </div>
         </div>

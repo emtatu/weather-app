@@ -47,13 +47,14 @@ function onSearchCity(event) {
     .then((response) => {
       data = response.data;
       country = response.data.sys.country;
-      localTime.innerHTML = `${today}, ${hour}:${min} CET in ${input.value}`;
+      localTime.innerHTML = `${input.value}, ${today}, ${hour}:${min} CET`;
       input.value = "";
       changeHTML(response);
       playVideoByWeather(response.data.weather[0].main.toLowerCase());
     });
 }
 function onChangeMetrics(type) {
+  debugger;
   typeUnit = type;
   if (data && type) {
     axios
@@ -84,11 +85,11 @@ function getCurrentLocation() {
           if (!data) {
             initVideoByWeather(weather);
           } else {
-            data = response.data;
             playVideoByWeather(weather);
           }
+          data = response.data;
           country = response.data.sys.country;
-          localTime.innerHTML = `${today}, ${hour}:${min} CET in ${response.data.name}`;
+          localTime.innerHTML = ` ${response.data.name}, ${today}, ${hour}:${min} CET `;
           changeHTML(response);
         });
     });
@@ -96,6 +97,16 @@ function getCurrentLocation() {
     // Browser doesn't support Geolocation
     alert("Browser not support");
   }
+}
+function getNextSevenDaysByCoordonate(coordonate) {
+  axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&
+        exclude=${part}&appid=${apiKey}`
+    )
+    .then(function (response) {
+      console.log(response);
+    });
 }
 
 // Change html from data
@@ -127,7 +138,7 @@ function changeFlag(country) {
   const flag = document.querySelector("#flag");
   flag.setAttribute(
     "src",
-    `https://www.countryflags.io/${country}/shiny/64.png`
+    `https://www.countryflags.io/${country}/shiny/32.png`
   );
 }
 function changeWeatherDetails(data) {
@@ -148,21 +159,21 @@ function changeWeatherDetails(data) {
   const minTemp = document.querySelector("#min-lol");
   const minTemData = data.main.temp_min.toFixed(1);
   minTemp.innerHTML = `Min temp is ${minTemData}°C`;
-  const sunRise = document.querySelector("#sun-rise");
-  const sunRiseData = new Date(data.sys.sunrise);
-  sunRise.innerHTML = `Sunrise is at ${formatAMPM(sunRiseData)}`;
   const sunSet = document.querySelector("#sun-set");
   const sunSetData = new Date(data.sys.sunset);
   sunSet.innerHTML = `Sunset is at ${formatAMPM(sunSetData)}`;
+  const maxTemp = document.querySelector("#max-lol");
+  const maxTempData = data.main.temp_max.toFixed(1);
+  maxTemp.innerHTML = `Max temp is ${maxTempData}°C`;
 }
 function formatAMPM(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? "pm" : "am";
+  // var ampm = hours >= 12 ? "pm" : "am";
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
   minutes = minutes < 10 ? "0" + minutes : minutes;
-  var strTime = hours + ":" + minutes + " " + ampm;
+  var strTime = hours + ":" + minutes + " ";
   return strTime;
 }
 

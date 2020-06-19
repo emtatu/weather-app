@@ -8,6 +8,7 @@
   z-index: 1;
   border-radius: 20%;
   width: 600px;
+  font-family: "Indie Flower", cursive;
 }
 
 .my-card {
@@ -17,13 +18,8 @@
   padding: 20px;
   width: 100%;
   margin-bottom: 1em;
-  background-image: linear-gradient(
-    -225deg,
-    #7085b6 0%,
-    #87a7d9 50%,
-    #def3f8 100%
-  );
 
+  background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
   opacity: 0.8;
   font-size: 12px;
 }
@@ -32,18 +28,27 @@
 #h-lol,
 #min-lol,
 #further-info,
-#sun-rise,
+#max-lol,
 #sun-set {
   border-radius: 10px;
   margin-bottom: 0.5em;
   padding: 5%;
   text-align: center;
   background: rgb(187, 194, 201);
+  height: 47px;
+  align-items: center;
 }
-.weather-now {
+/* .weather-now
+ {
   display: flex;
-  align-items: baseline;
+  
   font-size: 30px;
+  align-items: flex-end;
+  padding-top: 30px;
+
+} */
+.icon {
+  display: flex;
 }
 
 .temperature {
@@ -51,24 +56,40 @@
 }
 .units {
   text-align: center;
-  font-weight: 90px;
+  font-weight: 20px;
   font-size: large;
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
 }
 #celsius-link:hover,
 #farenheit-link:hover {
   cursor: pointer;
   font-weight: bold;
 }
+#celsius-link,
+#farenheit-link {
+  font-size: 16px;
+}
 .search-city {
   padding: 0.5px;
-  margin: solid 1px;
+
   text-align: center;
 }
-.wather-hourly {
+#feels-like {
   position: relative;
-  bottom: 10px;
+  padding-top: 10px;
+  bottom: 20px;
 }
 
+.wind,
+.humidity,
+.pressure,
+.min-temp {
+  flex-grow: 2;
+  display: flex;
+  padding-top: 50px;
+}
 .location {
   padding: 10px 20px;
   border-radius: 10px;
@@ -78,7 +99,7 @@
 }
 
 .location:hover {
-  border: solid 1px #b0c9e8;
+  border: #b0c9e8;
   background-color: #fff all 200ms;
 }
 .search {
@@ -86,11 +107,11 @@
   opacity: 0.8px;
   border-radius: 10px;
   margin: 10px;
-  background: rgb(203, 217, 218);
+  border: solid 0.5px #b0c9e8;
+  background: #fff all 200ms;
 }
 .search:hover {
-  border: solid 1px #b0c9e8;
-  background: #fff all 200ms;
+  background: rgb(203, 217, 218);
 }
 .new {
   display: flex;
