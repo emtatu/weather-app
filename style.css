@@ -76,6 +76,9 @@
 
   text-align: center;
 }
+.icon-forecast {
+  width: 70px;
+}
 #feels-like {
   position: relative;
   padding-top: 10px;

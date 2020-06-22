@@ -52,6 +52,47 @@ function onSearchCity(event) {
       changeHTML(response);
       playVideoByWeather(response.data.weather[0].main.toLowerCase());
     });
+
+  getForecast(input.value);
+}
+function getForecast(city) {
+  const el = document.querySelector("#next-hours-content");
+  axios
+    .get(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=${typeUnit}`
+    )
+    .then((response) => {
+      const list = response.data.list.splice(0, 7);
+      el.innerHTML = "";
+      list.forEach((element) => {
+        el.innerHTML += `
+        <div class="col">
+            <div class="updated-hour">
+                <h3>${formatHours(element.dt * 1000)}</h3>
+                <strong>${element.main.temp_max}°</strong>/ <strong>${
+          element.main.temp_min
+        }°</strong>
+                <img class="icon-forecast" src="https://openweathermap.org/img/wn/${
+                  element.weather[0].icon
+                }@2x.png" />
+            </div>
+        </div>
+        `;
+      });
+    });
+}
+function formatHours(timestamp) {
+  let date = new Date(timestamp);
+  let hours = date.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  let minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${hours}:${minutes}`;
 }
 function onChangeMetrics(type) {
   debugger;
@@ -91,22 +132,13 @@ function getCurrentLocation() {
           country = response.data.sys.country;
           localTime.innerHTML = ` ${response.data.name}, ${today}, ${hour}:${min} CET `;
           changeHTML(response);
+          getForecast(response.data.name);
         });
     });
   } else {
     // Browser doesn't support Geolocation
-    alert("Browser not support");
+    alert("Browser not support this location");
   }
-}
-function getNextSevenDaysByCoordonate(coordonate) {
-  axios
-    .get(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&
-        exclude=${part}&appid=${apiKey}`
-    )
-    .then(function (response) {
-      console.log(response);
-    });
 }
 
 // Change html from data
@@ -189,7 +221,7 @@ function initVideoByWeather(weather) {
   video.pause();
   if (weather.includes("rain") || weather.includes("thunder")) {
     source.setAttribute("src", "videos/rain.mp4");
-  } else if (weather.includes("sun")) {
+  } else if (weather.includes("sun") || weather.includes("clear")) {
     source.setAttribute("src", "videos/sun.mp4");
   } else if (weather.includes("cloud")) {
     source.setAttribute("src", "videos/cloud.mp4");
