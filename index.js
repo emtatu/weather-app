@@ -72,6 +72,9 @@ function getForecast(city) {
                 <strong>${element.main.temp_max}°</strong>/ <strong>${
           element.main.temp_min
         }°</strong>
+            </div>
+          <div>
+
                 <img class="icon-forecast" src="https://openweathermap.org/img/wn/${
                   element.weather[0].icon
                 }@2x.png" />
