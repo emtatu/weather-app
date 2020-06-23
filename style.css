@@ -79,6 +79,9 @@
 .icon-forecast {
   width: 70px;
 }
+.updated-hour {
+  height: 77px;
+}
 #feels-like {
   position: relative;
   padding-top: 10px;
